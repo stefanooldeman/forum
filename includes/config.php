@@ -6,3 +6,6 @@ $mysql = array(
 	'db_password' => '',
 	'db_name' => ''
 );
+
+ini_set('error_log', 'php_error.log');
+ini_set('display_errors', 0);
