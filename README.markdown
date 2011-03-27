@@ -22,7 +22,7 @@ I hear you ask: So why did you put it on github then?
 > Believe that making improvements and moving on goes faster than redoing the whole thing.
 
 The whole idea of putting this on github and actually doing this is very much inspired by a talk ["Project Triage and Recovery"](http://caseysoftware.com/blog/phpbenelux-2011-recap) by [@caseysoftware](https://twitter.com/caseysoftware, "on twitter")
-But ofcourse in my case there is no real problem. The project is has no huge complex codebase, no deadlines etc
+But ofcourse in my case there is no real problem. The project has no huge complex codebase, no deadlines etc
 therefore this could become very boring quickly, yes.
 And to make things interesting I've put some rules:
 
