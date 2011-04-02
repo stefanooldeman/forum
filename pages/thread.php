@@ -1,13 +1,9 @@
 <?php
 //edit on: 2009-10-21 (first since 2 years)
 //changed a few querys they were so ... old fashioned!
-require_once("includes/session.php");
-require_once("includes/connection.php");
-include_once("includes/functions.php");
-
 $query = "SELECT DATE_FORMAT(`startdate`, '%b %d %y @ %h:%i%p') AS date FROM thread ORDER BY id DESC ";
 
-if(!$date_set2 = mysql_query($query)){
+if(!$date_set2 = mysql_query($query, $connection)){
 	exit(mysql_error());
 }
 
@@ -138,7 +134,7 @@ if(isset($_POST['submit'])){
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------output all posts
-include("sidebar.php");
+
 if(isset($_GET['id'])){
 	print "<div id='wrapper'>";
 	//head info
@@ -266,5 +262,3 @@ else per_page("?page=%page", "7");
 print "</div>";
 //-----------------------------------------------------------------------------------end
 }
-include("includes/footer.php");
-?>

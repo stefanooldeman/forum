@@ -1,28 +1,24 @@
 <?php
-require_once("includes/session.php"); 
 require_once("includes/connection.php");
 include_once("includes/functions.php");
-
-redirect_to("thread.php");
-$listthreads = "SELECT * FROM thread ORDER BY id DESC";
-$threads = mysql_query($listthreads, $connection);
-confirm_query($listthreads);
+require_once("includes/session.php");
 
 
-
-include("includes/header.php");
-print "<h5>Threads</h5>\n";
-while ($thread = mysql_fetch_array($threads)){
-	print "<a href='thread.php?id={$thread['id']}'>". $thread['title'] ."</a>\n";
-		
-	$listusers = "SELECT * FROM users WHERE id = {$thread['user_id']}";
-	$users = mysql_query($listusers, $connection);
-	confirm_query($listusers);
-		
-	print " <a href='user.php?profile=";
-	while ($user = mysql_fetch_array($users)){	print $user['username']; } 
-	print "'>". $thread['post_by'] ."</a><br>\n";
+//todo determine get or post
+if(isset($_GET['p'])) {
+	$pageName = filter_input(INPUT_GET, 'p', FILTER_SANITIZE_STRING);
+} else {
+	$pageName = 'thread';
 }
 
-include("includes/footer.php");
-?>
+$file = 'pages/' . $pageName . '.php';
+if(file_exists($file)) {
+
+	include_once("includes/header.php");
+	include("sidebar.php");
+	include $file;
+	include("includes/footer.php");
+} else {
+	header('Status: 404 Not Found');
+	trigger_error('The requested page is not found: ' . $file, E_USER_WARNING);
+}
