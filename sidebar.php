@@ -1,55 +1,52 @@
 <?php
-	include_once("includes/form_functions.php");
-	
-	// START FORM PROCESSING
-	if (isset($_POST['login'])) { // Form has been submitted.
-		$errors = array();
+// START FORM PROCESSING
+if (isset($_POST['login'])) { // Form has been submitted.
+	$errors = array();
 
-		// perform validations on the form data
-		$required_fields = array('username', 'password');
-		$errors = array_merge($errors, check_required_fields($required_fields, $_POST));
+	// perform validations on the form data
+	$required_fields = array('username', 'password');
+	$errors = array_merge($errors, check_required_fields($required_fields, $_POST));
 
-		$fields_with_lengths = array('username' => 30, 'password' => 30);
-		$errors = array_merge($errors, check_max_field_lengths($fields_with_lengths, $_POST));
+	$fields_with_lengths = array('username' => 30, 'password' => 30);
+	$errors = array_merge($errors, check_max_field_lengths($fields_with_lengths, $_POST));
 
-		$username = trim(mysql_prep($_POST['username']));
-		$password = trim(mysql_prep($_POST['password']));
-		$hashed_password = sha1($password);
-		
-		if(empty($errors)){
-			// Check database to see if username and the hashed password exist there.
-			$query = "SELECT id, username ";
-			$query .= "FROM users ";
-			$query .= "WHERE username = '{$username}' ";
-			$query .= "AND hashed_password = '{$hashed_password}' ";
-			$query .= "LIMIT 1";
-			$result_set = mysql_query($query);
-			confirm_query($result_set);
-			if(mysql_num_rows($result_set) == 1){
-				// username/password authenticated
-				// and only 1 match
-				$found_user = mysql_fetch_array($result_set);
-				$_SESSION['user_id'] = $found_user['id'];
-				$_SESSION['username'] = $found_user['username'];
-				//$_SESSION['username'] = $found_user['username'];
-			} else {
-				// username/password combo was not found in the database
-				$loginmessage = " I'm sorry this combination won't work for you, perhaps your CapsLock is on?";
-			}
-		} else{
-			if (count($errors) == 1) {
-				$loginmessage = " Sorry, you really need to fill in 2 fields!";
-			} else {
-				$loginmessage = "WTF? Why are you poking in the air";
-			}
+	$username = trim(mysql_prep($_POST['username']));
+	$password = trim(mysql_prep($_POST['password']));
+	$hashed_password = sha1($password);
+
+	if(empty($errors)){
+		// Check database to see if username and the hashed password exist there.
+		$query = "SELECT id, username ";
+		$query .= "FROM users ";
+		$query .= "WHERE username = '{$username}' ";
+		$query .= "AND hashed_password = '{$hashed_password}' ";
+		$query .= "LIMIT 1";
+		$result_set = mysql_query($query);
+		confirm_query($result_set);
+		if(mysql_num_rows($result_set) == 1){
+			// username/password authenticated
+			// and only 1 match
+			$found_user = mysql_fetch_array($result_set);
+			$_SESSION['user_id'] = $found_user['id'];
+			$_SESSION['username'] = $found_user['username'];
+			//$_SESSION['username'] = $found_user['username'];
+		} else {
+			// username/password combo was not found in the database
+			$loginmessage = " I'm sorry this combination won't work for you, perhaps your CapsLock is on?";
 		}
-		
-	} else { // Form has not been submitted.
-		$username = "";
-		$password = "";
+	} else{
+		if (count($errors) == 1) {
+			$loginmessage = " Sorry, you really need to fill in 2 fields!";
+		} else {
+			$loginmessage = "WTF? Why are you poking in the air";
+		}
 	}
 
-include_once("includes/header.php");
+} else { // Form has not been submitted.
+	$username = "";
+	$password = "";
+}
+
 print "
 <div id='logo'><img src='images/audicious.jpg' alt='audicious.com' /></div>
 <div id='sidebar'>
@@ -120,6 +117,5 @@ if(isset($_SESSION['user_id'])){
         </div>";
 }
 print "</div>";
-?>		
 
 
