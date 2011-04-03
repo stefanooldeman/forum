@@ -8,7 +8,7 @@ if(isset($_GET['id'])){
 	$result = mysql_query($query, $connection);
 	confirm_query($query);
 } else {
-	redirect_to("index.php");
+	redirect_to('threads');
 }
 
 if(isset($_POST['submit'])){
@@ -47,7 +47,7 @@ while (@$comment = mysql_fetch_array($result)){
 		print "  <textarea tabindex='4' type='text' id='comment-text' name='comment' rows='10' cols='50'>".$comment['comment'] ."</textarea>\n<br /><br /><input type='submit' value='sumbit' name='submit'/>\n</div>";
 
 		print "</form>";
-	} else { redirect_to("thread.php");}
+	} else { redirect_to('threads');}
 }
 print "</div>";
 include("includes/footer.php");

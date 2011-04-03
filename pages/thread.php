@@ -127,7 +127,7 @@ if(isset($_POST['submit'])){
 	//$query .= "WHERE thread_id = {$threadId}";
 
 	if(@mysql_query($query)){
-		redirect_to("thread.php?id={$threadId}");
+		redirect_to('thread/' . $threadId);
 	} else{
 		print "<li class='error'>Bericht is niet opgeslagen: <b>".mysql_error()."</b></i>\n<br />\n<li>Query :".$query ."</li>";
 	}

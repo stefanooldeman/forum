@@ -33,7 +33,7 @@ if(isset($_POST['submit'])){
 	$query .= "'{$post_by}', '{$comment}')";
 
 	if(@mysql_query($query)){
-		redirect_to("comments.php");
+		redirect_to('comments');
 	} else{
 		print "<li class='error'>Bericht is niet opgeslagen: <b>".mysql_error()."</b></i>\n<br />\n<li>Query :".$query ."</li>";
 	}

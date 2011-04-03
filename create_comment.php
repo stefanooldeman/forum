@@ -30,7 +30,7 @@ if (empty($errors)){
 	)";
 	// stap 4 - SQL uitvoeren
 	if($query){
-		redirect_to("thread.php");
+		redirect_to('thread');
 	} else{
 		print "<li class='error'>Bericht is niet opgeslagen: <b>".mysql_error()."</b></i>
 		<li>Query :".$query ."</li>";

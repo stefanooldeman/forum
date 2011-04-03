@@ -7,7 +7,7 @@ if(isset($_GET['id'])){
 	$project_set = mysql_query($query);
 	confirm_query($project_set);
 	if(mysql_affected_rows() == 1) {
-		redirect_to("comments.php");
+		redirect_to('comments');
 		include("includes/header.php");
 	} else{
 		print "<ul>\n";

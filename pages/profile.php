@@ -4,7 +4,7 @@ require_once("includes/connection.php");
 include_once("includes/functions.php");
 
 if (!logged_in()) {
-	redirect_to("thread.php");
+	redirect_to('thread');
 }
 
 if(isset($_GET['id'])){
@@ -13,7 +13,7 @@ if(isset($_GET['id'])){
 	confirm_query($query);
 }
 else{
-	redirect_to("thread.php");
+	redirect_to('threads');
 }
 
 include("sidebar.php");

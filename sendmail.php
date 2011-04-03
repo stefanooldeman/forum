@@ -6,7 +6,7 @@ include_once("includes/functions.php");
 if(isset($_GET['action'])){
 	$action = $_GET['action'];
 } else {
-	redirect_to("thread.php");
+	redirect_to('threads');
 }
 
 //----------------------------------------user info

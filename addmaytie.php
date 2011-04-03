@@ -9,7 +9,7 @@ if(isset($_GET['action'])){
 } elseif(isset($_GET['id'])){
 	$_GET['id'] = $_GET['id'];
 } else {
-	redirect_to("thread.php");
+	redirect_to('threads');
 }
 
 $user_id = $_SESSION['user_id'];
@@ -31,7 +31,7 @@ if(intval($_GET['id']) && $action == "add"){
 	$query  .= "{$maytie_id}, '{$maytiesname}', '{$user_id}', '{$username}', NOW() )";
 
 	if(@mysql_query($query)){
-				redirect_to("profile.php?id={$user_id}");
+		redirect_to('user/profile/' . $user_id);
 	} else{
 		print "<li class='error'>there happend something really bad! please contact some admin: <b>".mysql_error()."</b></i>\n<br />\n<li>Query :".$query ."</li>";
 	}
