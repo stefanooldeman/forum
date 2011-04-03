@@ -73,7 +73,7 @@ if(!isset($_SESSION['user_id'])){
 	$numreaded = mysql_num_rows($read_set);
 
 	print "<h2 class='white'>Ahoy, <a href='" . BASE_URL . "user/profile/". $_SESSION['user_id'] ."'>". $_SESSION['username'] ."</a>!</h2>";
-	print"<ul>\n<li><a href='logout.php' class='tenpx offlinea'>sorry, i'm leaving!</a></li>";
+	print"<ul>\n<li><a href='" . BASE_URL . "logout' class='tenpx offlinea'>sorry, i'm leaving!</a></li>";
 
 	if($numreaded == 1) {
 		print "<li><a href='" . BASE_URL . "inbox' class='darkgreena'>1 New Message</a></li>";
