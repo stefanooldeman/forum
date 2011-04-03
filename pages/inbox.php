@@ -1,9 +1,5 @@
 <?php
-require_once("includes/session.php"); 
-require_once("includes/connection.php");
-include_once("includes/functions.php");
 confirm_logged_in(); 
-
 $user_id = $_SESSION['user_id'];
 $query = "SELECT * FROM inbox WHERE user_id = $user_id ORDER BY date DESC";
 $inbox_set = mysql_query($query, $connection);
@@ -25,7 +21,6 @@ $date_set = mysql_query($query, $connection);
 confirm_query($query);
 $post = mysql_fetch_array($date_set);
 	$date = $post['date'];
-include("sidebar.php");
 
 print "<div id='Lwrapper'>";
 
@@ -35,15 +30,11 @@ elseif($numreaded > 10){print "<h1>Hey go clean up your inbox Mr.populair";}
 else{print "<h1>Ahw nothing new = (</h1>";}
 print "<div id='inboxoptions'>
 <ul>    
-<li style='margin-right:2px;'><img src='images/email.png' /></li>
-<li><a href='inbox.php' class='bluea'>inbox</a></li>
-<li style='margin-right:2px;'><img src='images/comment_edit.png' /></li>
-<li><a href='sendmessage.php' class='bluea'>Create pm</a></li>
-<li style='margin-right:2px;'><img src='images/bin.png' /></li>
-<li><a href='' class='bluea'>Trash Can</a></li>";
+<li style='margin-right:2px;'><img src='" . MEDIA_URL . "images/email.png' /></li><li><a href='" . BASE_URL . "inbox' class='bluea'>inbox</a></li>
+<li style='margin-right:2px;'><img src='" . MEDIA_URL . "images/comment_edit.png' /></li><li><a href='" . BASE_URL . "inbox/new' class='bluea'>Create pm</a></li>
+<li style='margin-right:2px;'><img src='" . MEDIA_URL . "images/bin.png' /></li><li><a href='' class='bluea'>Trash Can</a></li>";
 if(isset($_GET['id'])){
-	print "<li style='margin-right:2px;'><img src='images/email_delete.png' /></li>
-<li><a href='deletemessage.php?id=". $_GET['id'] ."' class='bluea'>Delete</a></li>";
+	print "<li style='margin-right:2px;'><img src='" . MEDIA_URL . "images/email_delete.png' /></li><li><a href='" . BASE_URL . "inbox/delete/". $_GET['id'] ."' class='bluea'>Delete</a></li>";
 }
 print "</ul>
 </div>";
@@ -107,10 +98,10 @@ if(isset($_GET['id'])){
 	
 	print "<div class='inbox "; if($inbox['readed'] == 1){ print "pmrow2";} else {print "pmrow1";} print "'>";
 	print "
-	<div class='inboxsubject'><a href='inbox.php?id=". $inbox['id'] ."' class='blacka'>". $inbox['subject'] ."</a></div>
-	<div class='inboxfrom'><a href='profile.php?id=". $usernames['id'] ."' class='blacka'>". $usernames['username'] ."</a></div>
+	<div class='inboxsubject'><a href='" . BASE_URL . "inbox/" . $inbox['id'] . "' class='blacka'>" . stripslashes($inbox['subject']) . "</a></div>
+	<div class='inboxfrom'><a href='" . BASE_URL . "user/profile/" . $usernames['id'] . "' class='blacka'>". stripslashes($usernames['username']) ."</a></div>
 	<div class='inboxrecieved'><span class='blacka'>";
-		while ($post = mysql_fetch_array($date_set)){
+	while ($post = mysql_fetch_array($date_set)) {
 		print $post['date'];
 	}
 	print "</span></div>
@@ -118,5 +109,3 @@ if(isset($_GET['id'])){
 	}
 }
 print "</div>";
-include("includes/footer.php");
-?>

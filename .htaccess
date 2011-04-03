@@ -1,8 +1,21 @@
 AddDefaultCharset UTF-8
 
 RewriteEngine On
+
+# deny other requests than GET and POST
+RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK|OPTIONS|HEAD) [NC]
+RewriteRule .* - [F]
+
+RewriteRule ^thread\/new$ index.php?p=postthread
 RewriteRule ^thread(\/([0-9]+))?(\/.*)?\/?$ index.php?p=thread&id=$2
 RewriteRule ^threads(\/(discussions|projects|advice|meaningless))?\/?$ index.php?p=thread&category=$2
+
+RewriteRule ^inbox\/new\/?$ index.php?p=sendmessage
+RewriteRule ^inbox(\/([0-9]+))?\/?$ index.php?p=inbox&id=$2
+RewriteRule ^inbox\/delete\/([0-9]+)\/?$ index.php?p=deletemessage&id=$1
+
+RewriteRule ^user\/invites\/?$ index.php?p=invite
+RewriteRule ^user\/profile(\/[0-9]+)?\/?$ index.php?p=profile&id=$1
 
 
 

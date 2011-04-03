@@ -1,11 +1,7 @@
 <?php
-require_once("includes/session.php"); 
-require_once("includes/connection.php");
-include_once("includes/functions.php");
 confirm_logged_in(); 
 if(isset($GET['id'])){}
 if(isset($_POST['submit'])){
-	include_once("includes/form_functions.php");	
 	$errors = array();
 	$required_fields = array('recieved', 'title', 'comment');
 	
@@ -33,7 +29,7 @@ if(isset($_POST['submit'])){
 	$query .= " )VALUES( ";
 	$query .= "'{$title}', '{$post_by}', '{$recieved}', '{$comment}' )";
 	
-	if(@mysql_query($query)){ $message = "<a href='inbox.php'>Wel done you made it!</a>"; } else{$message = "wtf happend. contact some admin!"; print $sub_query . mysql_error();}	
+	if(@mysql_query($query)){ $message = "<a href='" . BASE_URL . "inbox'>Wel done you made it!</a>"; } else{$message = "wtf happend. contact some admin!"; print $sub_query . mysql_error();}
 } else{
 	if (count($errors) == 1) {
 		$message = "You fool, you forgot a field.";
@@ -47,7 +43,6 @@ $query = "SELECT * FROM mayties WHERE user_id = '{$_SESSION['user_id']}'";
 $mayties = mysql_query($query, $connection);
 confirm_query($query);
 
-include("sidebar.php");
 ?>
 <script type="text/javascript">
 
@@ -63,7 +58,7 @@ include("sidebar.php");
 print "<div id='Lwrapper'>";
 if (!empty($message)){print display_errors($errors);}
 print "<h1>Send a messages</h1>
-<form action='".$_SERVER['PHP_SELF']."' method='post' name='compose'>
+<form method='post' name='compose'>
 <h4>lvl 1./Send To:</h4>
 <div class='composefield'>
 	<input type='text' name='recieved' value='' />	<br />";
@@ -90,5 +85,3 @@ print "</div>
 <input type='submit' value='Send pm' name='submit'/>
 </div>
 </form></div>";
-include("includes/footer.php");
-?>

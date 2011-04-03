@@ -14,7 +14,7 @@ return $value;
 
 function redirect_to($location = NULL) {
 	if ($location != NULL){
-		header("Location: {$location}");
+		header('Location: ' . BASE_URL . $location);
 		exit;
 	}
 }
@@ -48,9 +48,9 @@ if(isset($_GET['category']))
 
 if ($page != "1" && round($numofpages) != "0") {
   if(isset($_GET['category']))
-	  print str_replace("%page", round($page-1), '<a href="?category='. $_GET['category'] . $link.'"><font face="Trebuchet MS">«</font></a>&nbsp; ');
+	  print str_replace("%page", round($page-1), '<a href="?category='. $_GET['category'] . $link.'"><font face="Trebuchet MS">ï¿½</font></a>&nbsp; ');
   else
-	  print str_replace("%page", round($page-1), '<a href="'.$link.'"><font face="Trebuchet MS">«</font></a>&nbsp; ');
+	  print str_replace("%page", round($page-1), '<a href="'.$link.'"><font face="Trebuchet MS">ï¿½</font></a>&nbsp; ');
 }
 
 for($i = 1; $i <= $numofpages; $i++) {
@@ -71,9 +71,9 @@ print "[$i]";
 
 if ($page != round($numofpages) && round($numofpages) != "0") {
 if(isset($_GET['category']))
-	print str_replace("%page", round($page+1), '<a href="?category='. $_GET['category'] . $link.'"><font face="Trebuchet MS">»</font></a>');
+	print str_replace("%page", round($page+1), '<a href="?category='. $_GET['category'] . $link.'"><font face="Trebuchet MS">ï¿½</font></a>');
 else
-	print str_replace("%page", round($page+1), '<a href="'.$link.'"><font face="Trebuchet MS">»</font></a>');
+	print str_replace("%page", round($page+1), '<a href="'.$link.'"><font face="Trebuchet MS">ï¿½</font></a>');
 }
 }
 ?>

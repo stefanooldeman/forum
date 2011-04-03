@@ -1,9 +1,6 @@
 <?php
-require_once("includes/session.php"); 
-require_once("includes/connection.php");
-include_once("includes/functions.php");
 confirm_logged_in(); 
-if(isset($_POST['submit'])){
+if(isset($_POST['submit'])) {
 	$fieldnames = array('title', 'status', 'comment');
 	foreach($fieldnames as $postfield){
 		$$postfield = mysql_prep($_POST[$postfield]);
@@ -13,7 +10,6 @@ if(isset($_POST['submit'])){
 	$category = $_POST['category'];
 	$current_time = date("y\\-m\\-d H\\:i\\:s");
 	
-	include_once("includes/form_functions.php");	
 	$errors = array();
 	$required_fields = array('title', 'comment');
 	
@@ -56,12 +52,13 @@ if(isset($_POST['submit'])){
 		}
 	}
 }
-include("sidebar.php");
 
 print "<div id='wrapper'>";
-if (!empty($message)){print display_errors($errors);}
+if(!empty($message)) {
+	print display_errors($errors);
+}
 print "<h1>Got something to tell ?</h1>
-<form action='".$_SERVER['PHP_SELF']."' method='post'>
+<form method='post'>
 <h4>lvl 1./Choose a catogory:</h4>
 <div class='btn'>
 <input tabindex='6' type='radio' name='category' value='1' checked /><span class='white'> Discussion</span>
@@ -86,5 +83,3 @@ print "<h1>Got something to tell ?</h1>
 <input type='submit' value='i promise, post' name='submit'/>
 </div>
 </form></div>";
-include("includes/footer.php");
-?>

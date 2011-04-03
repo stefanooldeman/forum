@@ -72,15 +72,15 @@ if(!isset($_SESSION['user_id'])){
 	confirm_query($read_set);
 	$numreaded = mysql_num_rows($read_set);
 
-	print "<h2 class='white'>Ahoy, <a href='profile.php?id=". $_SESSION['user_id'] ."'>". $_SESSION['username'] ."</a>!</h2>";
+	print "<h2 class='white'>Ahoy, <a href='" . BASE_URL . "user/profile/". $_SESSION['user_id'] ."'>". $_SESSION['username'] ."</a>!</h2>";
 	print"<ul>\n<li><a href='logout.php' class='tenpx offlinea'>sorry, i'm leaving!</a></li>";
 
 	if($numreaded == 1) {
-		print "<li><a href='" . BASE_URL . "user/inbox' class='darkgreena'>1 New Message</a></li>";
+		print "<li><a href='" . BASE_URL . "inbox' class='darkgreena'>1 New Message</a></li>";
 	} elseif($numreaded > 1) {
-		print "<li><a href='inbox.php' class='darkgreena'>".$numreaded." New Messages</a></li>";
+		print "<li><a href='" . BASE_URL . "inbox' class='darkgreena'>".$numreaded." New Messages</a></li>";
 	} else {
-		print "<li><a href='inbox.php' class='darkgreena'>No Messages</a></li>";
+		print "<li><a href='" . BASE_URL . "inbox' class='darkgreena'>No Messages</a></li>";
 	}
 	
 	print "</ul>\n";
@@ -103,11 +103,11 @@ print "<div id='threadnav'>
 if(isset($_SESSION['user_id'])){
  print "<div id='usernav'>
 		<img src='" . MEDIA_URL . "images/h1.hometown.png' width='198' usemap='#hometown' />
-		<map name='hometown' id='hometown'><area shape='rect' coords='0,0,198,20' href='" . BASE_URL . "profile/" . $_SESSION['user_id'] . "' alt='profile page' /></map>
+		<map name='hometown' id='hometown'><area shape='rect' coords='0,0,198,20' href='" . BASE_URL . "user/profile/" . $_SESSION['user_id'] . "' alt='profile page' /></map>
        	<div class='browndot'/><span></span></div>
         <ul>
             <li><a href='" . BASE_URL . "user/profile/" . $_SESSION['user_id'] . "' class='darkgreena'>My acount</a></li>
-            <li><a href='" . BASE_URL . "user/inbox' class='darkgreena'>Inbox</a></li>
+            <li><a href='" . BASE_URL . "inbox' class='darkgreena'>Inbox</a></li>
             <li><a href='' class='darkgreena'>Preferences</a></li>
 			<li><a href='" . BASE_URL . "thread/new' class='darkgreena'>Post Thread</a></li>
             <li><a href='" . BASE_URL . "user/invites' class='darkgreena'>Invites</a></li>

@@ -1,9 +1,23 @@
 <?php
+if(true) {
+	include 'includes/config_mirror.php';
+} else {
+	include 'includes/config.php';
+}
+
 require "includes/connection.php";
 include "includes/functions.php";
 include "includes/form_functions.php";
 require "includes/session.php";
 
+//todo move this to some request handler
+
+//remove empty GET values from the list
+foreach($_GET as $key => $value) {
+	if($value === '') {
+		unset($_GET[$key]);
+	}
+}
 
 //todo determine get or post
 if(isset($_GET['p'])) {

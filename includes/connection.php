@@ -1,11 +1,4 @@
 <?php // Connect
-
-if(true) {
-	include 'config_mirror.php';
-} else {
-	include 'config.php';
-}
-
 $connection = mysql_connect("localhost", $mysql['db_user'], $mysql['db_password']);
 if (!$connection){
 	die("Database connection failed: ". mysql_error());
