@@ -6,6 +6,9 @@ RewriteEngine On
 RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK|OPTIONS|HEAD) [NC]
 RewriteRule .* - [F]
 
+RewriteRule ^login$ index.php?p=login
+RewriteRule ^logout$ index.php?p=logout
+
 RewriteRule ^thread\/new$ index.php?p=postthread
 RewriteRule ^thread\/bookmark\/([0-9]+)\/?$ index.php?p=addfav&id=$1
 RewriteRule ^thread(\/([0-9]+))?(\/.*)?\/?$ index.php?p=thread&id=$2
