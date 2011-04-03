@@ -1,7 +1,8 @@
 <?php
-require_once("includes/connection.php");
-include_once("includes/functions.php");
-require_once("includes/session.php");
+require "includes/connection.php";
+include "includes/functions.php";
+include "includes/form_functions.php";
+require "includes/session.php";
 
 
 //todo determine get or post

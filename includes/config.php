@@ -7,5 +7,8 @@ $mysql = array(
 	'db_name' => ''
 );
 
+const BASE_URL	= 'http://local.forum/';
+const MEDIA_URL = 'http://local.forum/media/';
+
 ini_set('error_log', 'php_error.log');
 ini_set('display_errors', 0);

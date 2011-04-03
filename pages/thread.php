@@ -212,7 +212,7 @@ print "<div id='threadheaders'>
 <div id='threadlisting'>";
 
 
-	while($thread = mysql_fetch_array($threads)) {
+while($thread = mysql_fetch_array($threads)) {
 	$id = $thread['id'];
 
 	$lastcomment  ="SELECT * FROM comment WHERE thread_id = $id ORDER BY id DESC LIMIT 1";
@@ -240,7 +240,7 @@ print "<div id='threadheaders'>
 
 	print "<div class='thread row1'>
 				<div class='threadlistelement threadlisttitle'>
-					<b><a href='thread.php?id=". $thread['id'] ."'>". $thread['title'] ."</a></b>
+					<b><a href='" . BASE_URL . "thread/". $thread['id'] ."/" . urlencode(stripslashes($thread['title'])) . "'>" . stripslashes($thread['title']) ."</a></b>
 					<a href='/thread/134530/Names-to-Guns#end' class='darkgreya tenpx'>#</a>
 					<div class='darkgreya ninepx'>". $threadcategory ."</div>
 				</div>
@@ -252,12 +252,12 @@ print "<div id='threadheaders'>
 				<div class='threadlistelement threadlistposted'>";
 				while ($comment = mysql_fetch_array($users_set)){
 					print "<b><a href='profile.php?id=". $comment['user_id'] ."'>".$comment['post_by']."</a></b>";
-					}
-					print "<div class='darkgreya ninepx'>". $lastdate ."</div>
+				}
+				print "<div class='darkgreya ninepx'>". $lastdate ."</div>
 				</div>
 				<div class='threadlistelement threadlistposts'>$numposts</div>
 								<div class='threadlistelement threadlistfaves' id='fave_134530'>
-								<a href='addfav.php?id=$id'><img alt='Add Favorite?' src='images/heart_add.png' height='16' width='12' /></a>
+								<a href='addfav.php?id=$id'><img alt='Add Favorite?' src='" . MEDIA_URL . "images/heart_add.png' height='16' width='12' /></a>
 								</div>
 								<div class='clear'></div>
 			</div>
