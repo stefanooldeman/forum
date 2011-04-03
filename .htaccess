@@ -19,6 +19,7 @@ RewriteRule ^inbox\/delete\/([0-9]+)\/?$ index.php?p=deletemessage&id=$1
 
 RewriteRule ^user\/invites\/?$ index.php?p=invite
 RewriteRule ^user\/profile(\/([0-9]+))?\/?$ index.php?p=profile&id=$2
+RewriteRule ^user\/friends\/(add|accept)(\/([0-9]+))?\/?$ index.php?p=addmaytie&action=$1&id=$3
 
 
 

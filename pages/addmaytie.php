@@ -1,7 +1,4 @@
 <?php
-require_once("includes/session.php"); 
-require_once("includes/connection.php");
-include_once("includes/functions.php");
 confirm_logged_in(); 
 
 if(isset($_GET['action'])){
@@ -44,6 +41,3 @@ $query  = "UPDATE mayties SET confirm = '1' WHERE maytie_id = {$user_id} LIMIT 1
 		print "<li class='error'>there happend something really bad! please contact some admin: <b>".mysql_error()."</b></i>\n<br />\n<li>Query :".$query ."</li>";
 	}
 }
-
-include("includes/footer.php");
-?>
