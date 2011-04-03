@@ -257,7 +257,7 @@ while($thread = mysql_fetch_array($threads)) {
 				</div>
 				<div class='threadlistelement threadlistposts'>$numposts</div>
 								<div class='threadlistelement threadlistfaves' id='fave_134530'>
-								<a href='addfav.php?id=$id'><img alt='Add Favorite?' src='" . MEDIA_URL . "images/heart_add.png' height='16' width='12' /></a>
+								<a href='" . BASE_URL . "thread/bookmark/" . $id . "'><img alt='Add Favorite?' src='" . MEDIA_URL . "images/heart_add.png' height='16' width='12' /></a>
 								</div>
 								<div class='clear'></div>
 			</div>
