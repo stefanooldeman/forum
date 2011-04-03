@@ -10,7 +10,7 @@ $query = "UPDATE users SET
 	if (mysql_affected_rows() == 1) {
 		// Success
 		echo "Your Account has been activated! <br />";
-		echo "<a href=\"login.php\">Click here to Log In.</a>";
+		echo "<a href=\"" . BASE_URL . "threads\">Click here to Log In.</a>";
 	} else {
 		// Failed
 		echo mysql_error();

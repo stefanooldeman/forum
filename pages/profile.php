@@ -40,14 +40,9 @@ $query = "SELECT * FROM mayties WHERE maytie_id= {$_GET['id']} ORDER BY date DES
 $mayties_set = mysql_query($query, $connection);
 confirm_query($query);
 }
-print "<div id='culmmain'>
-    <h1>". $username ." is cool</h1>";
-if(isset($_SESSION['user_id'])){
-	if($_SESSION['user_id'] !== $user_id ){
-		print "<a href='addmaytie.php?action=add&id=". $user_id ."'>add as maytie</a>";
-	}
-} else{
-	print "<a href='login.php'>add as maytie</a>";
+print "<div id='culmmain'><h1>". $username ." is cool</h1>";
+if($_SESSION['user_id'] !== $user_id ) {
+	print "<a href='addmaytie.php?action=add&id=". $user_id ."'>add as maytie</a>";
 }
 print "<div id='proposts'>
     <h4>bookmarks:</h4>";
