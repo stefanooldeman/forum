@@ -1,4 +1,16 @@
 <?php
+
+$categories = array(1 => 'discussions', 2 => 'projects', 3 => 'advice', 4 => 'meaningless');
+if(isset($_GET['category']) && in_array($_GET['category'], $categories)) {
+	$list = array_flip($categories);
+	$val = filter_input(INPUT_GET, 'category', FILTER_SANITIZE_STRING);
+	$categoryId = $list[$val];
+}
+
+if(isset($_GET['id'])) {
+	$threadId = (int) filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+}
+
 //edit on: 2009-10-21 (first since 2 years)
 //changed a few querys they were so ... old fashioned!
 $query = "SELECT DATE_FORMAT(`startdate`, '%b %d %y @ %h:%i%p') AS date FROM thread ORDER BY id DESC ";
@@ -11,56 +23,54 @@ $dates2 = mysql_fetch_array($date_set2);
 $startdate =  $dates2['date'];
 
 
-if(isset($_GET['id'])){
-//show the thread page with all the reply's
+if(isset($threadId)) {
+	//show the thread page with all the reply's
 	/* Set How many results to display per page */
-$pp = "5";
+	$pp = "5";
 
-$query = "SELECT * FROM comment WHERE thread_id = {$_GET['id']}";
-$pages_set = mysql_query($query);
-$total = mysql_num_rows($pages_set);
-$numofpages = $total / $pp;
+	$query = 'SELECT * FROM comment WHERE thread_id = ' . $threadId;
+	$pages_set = mysql_query($query);
+	$total = mysql_num_rows($pages_set);
+	$numofpages = $total / $pp;
 
-if (!isset($_GET['page'])) {
-$page = 1;
-}
-else {
-$page = $_GET['page'];
-}
-$limitvalue = $page * $pp - ($pp);
+	if (!isset($_GET['page'])) {
+		$page = 1;
+	} else {
+		$page = $_GET['page'];
+	}
+	$limitvalue = $page * $pp - ($pp);
 
-	$comments  = "SELECT * FROM comment ";
-	$comments .= " WHERE thread_id = {$_GET['id']} ";
-	$comments .= " ORDER BY id ASC LIMIT $limitvalue, $pp";
+	$comments  = '
+		SELECT * FROM comment
+		WHERE thread_id = ' . $threadId . '
+		ORDER BY id ASC LIMIT ' . $limitvalue . ', ' . $pp;
+
 	$comment_set = mysql_query($comments, $connection);
 	confirm_query($comments);
 
 	$numrow = mysql_num_rows($comment_set);
-	if($numrow == 0){redirect_to("thread.php");}
+
 } else {
 
-
-
 	/* Set How many results to display per page */
-$pp = "5";
+	$pp = "5";
 
-$query = "SELECT * FROM thread  ORDER BY id DESC";
-$pages_set = mysql_query($query);
-$total = mysql_num_rows($pages_set);
-$numofpages = $total / $pp;
-if (!isset($_GET['page'])) {
-$page = 1;
-}
-else {
-$page = $_GET['page'];
-}
-$limitvalue = $page * $pp - ($pp);
+	$query = "SELECT * FROM thread  ORDER BY id DESC";
+	$pages_set = mysql_query($query);
+	$total = mysql_num_rows($pages_set);
+	$numofpages = $total / $pp;
+	if (!isset($_GET['page'])) {
+		$page = 1;
+	} else {
+		$page = $_GET['page'];
+	}
+	$limitvalue = $page * $pp - ($pp);
 
-	if(isset($_GET['category'])){
+	if(isset($categoryId)) {
 		/* Set How many results to display per page */
 		$pp = "5";
 
-		$query = "SELECT * FROM thread WHERE category = {$_GET['category']} ORDER BY id DESC";
+		$query = "SELECT * FROM thread WHERE category = " . $categoryId . "  ORDER BY id DESC";
 		$pages_set = mysql_query($query);
 		$total = mysql_num_rows($pages_set);
 		$numofpages = $total / $pp;
@@ -71,24 +81,21 @@ $limitvalue = $page * $pp - ($pp);
 		$page = $_GET['page'];
 		}
 
-		$listthreads = "SELECT * FROM thread WHERE category = {$_GET['category']} ORDER BY id DESC LIMIT $limitvalue, $pp";
+		$listthreads = "SELECT * FROM thread WHERE category = " . $categoryId . " ORDER BY id DESC LIMIT $limitvalue, $pp";
 		$threads = mysql_query($listthreads, $connection);
 		confirm_query($listthreads);
-
-
 	} else{
 		$listthreads = "SELECT * FROM thread ORDER BY id DESC LIMIT $limitvalue, $pp";
 		$threads = mysql_query($listthreads, $connection);
 		confirm_query($listthreads);
-
 	}
 }
 
-$info  = "SELECT * FROM thread ";
-if(isset($_GET['id'])){
-$info .= "WHERE id = {$_GET['id']} ";
+$info  = 'SELECT * FROM thread ';
+if(isset($threadId)){
+	$info .= 'WHERE id = ' . $threadId . ' ';
 }
-$info .= "LIMIT 1";
+$info .= 'LIMIT 1';
 $info_set = mysql_query($info, $connection);
 confirm_query($info);
 
@@ -108,7 +115,7 @@ if(isset($_POST['submit'])){
 
 
 	$comment = mysql_prep($_POST['comment']);
-	$thread_id = $_GET['id'];
+	$thread_id = $threadId;
 	$post_by = $_SESSION['username'];
 	$user_id = $_SESSION['user_id'];
 
@@ -117,10 +124,10 @@ if(isset($_POST['submit'])){
 	$query .= "thread_id, post_by, user_id, comment ";
 	$query .= ") VALUES ( ";
 	$query .= "'{$thread_id}', '{$post_by}', {$user_id}, '{$comment}') ";
-	//$query .= "WHERE thread_id = {$_GET['id']}";
+	//$query .= "WHERE thread_id = {$threadId}";
 
 	if(@mysql_query($query)){
-		redirect_to("thread.php?id={$_GET['id']}");
+		redirect_to("thread.php?id={$threadId}");
 	} else{
 		print "<li class='error'>Bericht is niet opgeslagen: <b>".mysql_error()."</b></i>\n<br />\n<li>Query :".$query ."</li>";
 	}
@@ -135,7 +142,7 @@ if(isset($_POST['submit'])){
 
 //--------------------------------------------------------------------------------------------------------------------------------output all posts
 
-if(isset($_GET['id'])){
+if(isset($threadId)){
 	print "<div id='wrapper'>";
 	//head info
 
@@ -144,10 +151,10 @@ if(isset($_GET['id'])){
 	There are {$numrow} reply's";
 	}
 	print "<br />";
-	per_page("?id=". $_GET['id'] ."&page=%page", "7");
+	per_page("?id=". $threadId ."&page=%page", "7");
 
 	print "<div class='orangeline'><span></span></div>";
-	while ($comment = mysql_fetch_array($comment_set)){
+	while ($comment = mysql_fetch_array($comment_set)) {
 		print "<div class='postuser'>
 		<div class='postusername'><a href='profile.php?id=". $comment['user_id'] ."'>". $comment['post_by']  ."</a></div>
 		<div class='postusertime tenpx'>12 minutes ago</div>
@@ -167,7 +174,7 @@ if(isset($_GET['id'])){
 		print "</div>
 		<div class='postseperator'><span></span></div>
 		<div class='orangeline'><span></span></div>";
-		}
+	}
 
 
 // ------------------------------------------------------------------------------------------------------------------the submit form
@@ -175,7 +182,7 @@ if(isset($_GET['id'])){
 
 if (!empty($message)){ 	print "<p class='error'>" . $message . "</p>";}
 if (!empty($errors)){ display_errors($errors);}
-	print "<form action='thread.php?id={$_GET['id']}' method='post'>";
+	print "<form action='thread.php?id={$threadId}' method='post'>";
 
 	print "   <label for='comment-text'>comment:</label><br />";
 	print "  <textarea tabindex='4' type='text' id='comment-text' name='comment' rows='10' cols='50'></textarea><br /><br />";
@@ -189,8 +196,11 @@ if (!empty($errors)){ display_errors($errors);}
 print "<div id='wrapper'>";
 
 print 'Pages: '.round($numofpages).'<br>';
-if(isset($_GET['category'])) per_page("&page=%page", "7");
-else per_page("?page=%page", "7");
+if(isset($categoryId)) {
+	per_page("&page=%page", "7");
+} else {
+	per_page("?page=%page", "7");
+}
 
 print "<div id='threadheaders'>
 	<div class='threadlistelement threadlisttitle'>Thread Title &amp; Category</div>
@@ -202,7 +212,7 @@ print "<div id='threadheaders'>
 <div id='threadlisting'>";
 
 
-	while ($thread = mysql_fetch_array($threads)){
+	while($thread = mysql_fetch_array($threads)) {
 	$id = $thread['id'];
 
 	$lastcomment  ="SELECT * FROM comment WHERE thread_id = $id ORDER BY id DESC LIMIT 1";
@@ -212,7 +222,7 @@ print "<div id='threadheaders'>
 	$query = "SELECT DATE_FORMAT(lastdate, '%b %d %y @ %h:%i%p') AS date FROM comment WHERE thread_id = $id ORDER BY id DESC ";
 	$date_set = mysql_query($query, $connection);
 	confirm_query($date_set);
-	
+
 	$dates = mysql_fetch_array($date_set);
 	$lastdate = $dates['date'];
 
@@ -228,7 +238,7 @@ print "<div id='threadheaders'>
 	if($thread['category'] == 4){ $threadcategory = "Meaningless";}
 
 
-print "<div class='thread row1'>
+	print "<div class='thread row1'>
 				<div class='threadlistelement threadlisttitle'>
 					<b><a href='thread.php?id=". $thread['id'] ."'>". $thread['title'] ."</a></b>
 					<a href='/thread/134530/Names-to-Guns#end' class='darkgreya tenpx'>#</a>
@@ -257,8 +267,11 @@ print "<div class='thread row1'>
 print "<br />";
 echo 'Pages: '.round($numofpages).'<br>';
 
-if(isset($_GET['category'])) per_page("&page=%page", "7");
-else per_page("?page=%page", "7");
+if(isset($categoryId)) {
+	per_page("&page=%page", "7");
+} else {
+	per_page("?page=%page", "7");
+}
 print "</div>";
 //-----------------------------------------------------------------------------------end
 }
