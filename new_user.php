@@ -1,51 +1,53 @@
-<?php require_once("includes/session.php"); ?>
-<?php require_once("includes/connection.php"); ?>
-<?php require_once("includes/functions.php"); ?>
-<?php confirm_logged_in(); ?>
 <?php
-	include_once("includes/form_functions.php");
-	
-	// START FORM PROCESSING
-	if (isset($_POST['submit'])) { // Form has been submitted.
-		$errors = array();
+include_once 'includes/config_mirror.php';
+require_once("includes/session.php");
+require_once("includes/connection.php");
+require_once("includes/functions.php");
+confirm_logged_in();
 
-		// perform validations on the form data
-		$required_fields = array('username', 'password');
-		$errors = array_merge($errors, check_required_fields($required_fields, $_POST));
+include_once("includes/form_functions.php");
 
-		$fields_with_lengths = array('username' => 30, 'password' => 30);
-		$errors = array_merge($errors, check_max_field_lengths($fields_with_lengths, $_POST));
+// START FORM PROCESSING
+if (isset($_POST['submit'])) { // Form has been submitted.
+	$errors = array();
 
-		$username = trim(mysql_prep($_POST['username']));
-		$password = trim(mysql_prep($_POST['password']));
-		$hashed_password = sha1($password);
+	// perform validations on the form data
+	$required_fields = array('username', 'password');
+	$errors = array_merge($errors, check_required_fields($required_fields, $_POST));
 
-		if ( empty($errors) ) {
-			$query = "INSERT INTO users (
-							username, hashed_password
-						) VALUES (
-							'{$username}', '{$hashed_password}'
-						)";
-			$result = mysql_query($query, $connection);
-			if ($result) {
-				$message = "The user was successfully created.";
-			} else {
-				$message = "The user could not be created.";
-				$message .= "<br />" . mysql_error();
-			}
+	$fields_with_lengths = array('username' => 30, 'password' => 30);
+	$errors = array_merge($errors, check_max_field_lengths($fields_with_lengths, $_POST));
+
+	$username = trim(mysql_prep($_POST['username']));
+	$password = trim(mysql_prep($_POST['password']));
+	$hashed_password = sha1($password);
+
+	if ( empty($errors) ) {
+		$query = "INSERT INTO users (
+						username, hashed_password
+					) VALUES (
+						'{$username}', '{$hashed_password}'
+					)";
+		$result = mysql_query($query, $connection);
+		if ($result) {
+			$message = "The user was successfully created.";
 		} else {
-			if (count($errors) == 1) {
-				$message = "There was 1 error in the form.";
-			} else {
-				$message = "There were " . count($errors) . " errors in the form.";
-			}
+			$message = "The user could not be created.";
+			$message .= "<br />" . mysql_error();
 		}
-	} else { // Form has not been submitted.
-		$username = "";
-		$password = "";
+	} else {
+		if (count($errors) == 1) {
+			$message = "There was 1 error in the form.";
+		} else {
+			$message = "There were " . count($errors) . " errors in the form.";
+		}
 	}
- include("includes/header.php"); ?>
-
+} else { // Form has not been submitted.
+	$username = "";
+	$password = "";
+}
+ include("includes/header.php");
+ ?>
 <table id="structure">
 	<tr>
 		<td id="navigation">
@@ -69,7 +71,8 @@
 					<td colspan="2"><input type="submit" name="submit" value="Create user" /></td>
 				</tr>
 			</table>
-			</form>		</td>
+			</form>
+		</td>
 	</tr>
 </table>
 <?php include("includes/footer.php"); ?>

@@ -1,8 +1,4 @@
 <?php
-require_once("includes/session.php"); 
-require_once("includes/connection.php");
-include_once("includes/functions.php");
-
 if (!logged_in()) {
 	redirect_to('thread');
 }
@@ -16,13 +12,12 @@ else{
 	redirect_to('threads');
 }
 
-include("sidebar.php");
 print "<div id='wrapper'>";
 while ($user = mysql_fetch_array($profile_set)){
-$username = $user['username'];
-$story = $user['story'];
-$picture = $user['picture'];
-$user_id = $user['id'];
+	$username = $user['username'];
+	$story = $user['story'];
+	$picture = $user['picture'];
+	$user_id = $user['id'];
 }
 $query = "SELECT * FROM fav_thread WHERE user_id= {$_GET['id']} ORDER BY date DESC";
 $favorites_set = mysql_query($query, $connection);
@@ -80,7 +75,7 @@ if($_GET['id'] == $_SESSION['user_id']){
 	if(empty($picture)){
 	 print "<div class='nopic'><a href='imgupload.php' class='greya'>upload picture</a></div>";
 	} else{
-		print "<img src='". $picture ."' alt='Hey im ". $username ."' />\n";
+		print "<img src='". BASE_URL . $picture ."' alt='Hey im ". $username ."' />\n";
 	}
 	print "</div>\n<div id='prostory'>
 	<h1>I'm saying:</h1>
@@ -88,5 +83,3 @@ if($_GET['id'] == $_SESSION['user_id']){
     </div>    
 </div>";
 print "</div>";
-include("includes/footer.php");
-?>

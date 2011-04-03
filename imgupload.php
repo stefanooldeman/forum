@@ -1,14 +1,14 @@
 <?php
+require 'includes/config_mirror.php';
 require_once("includes/session.php"); 
 require_once("includes/connection.php");
 include_once("includes/functions.php");
 confirm_logged_in(); 
 
-
 if(isset($_POST['submit'])){
 	
 	$req_fields = array('file');
-	$allowedextensions = array('jpeg', 'jpg', 'JPEG', 'JPG');
+	$allowedextensions = array('jpeg', 'jpg', 'JPEG', 'JPG', 'png');
 	$dest_dir = "uploads/";
 	$file = $_FILES['file'];
 	$user_id = $_SESSION['user_id'];
@@ -87,9 +87,7 @@ if(isset($_POST['submit'])){
 
 print "<h1>Upload een Afbeelding</h1>";
 
-print "<form action='{$_SERVER['PHP_SELF']}' method='post' enctype='multipart/form-data'>
+print "<form method='post' enctype='multipart/form-data'>
 <input type='file' name='file'>\n
 <input type='submit' name='submit'>\n
 <form>";
-include_once("includes/footer.php");
-?>
