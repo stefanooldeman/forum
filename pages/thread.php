@@ -156,11 +156,11 @@ if(isset($threadId)){
 	print "<div class='orangeline'><span></span></div>";
 	while ($comment = mysql_fetch_array($comment_set)) {
 		print "<div class='postuser'>
-		<div class='postusername'><a href='profile.php?id=". $comment['user_id'] ."'>". $comment['post_by']  ."</a></div>
+		<div class='postusername'><a href='" . BASE_URL . "user/profile/". $comment['user_id'] ."'>". $comment['post_by']  ."</a></div>
 		<div class='postusertime tenpx'>12 minutes ago</div>
 		<div class='postuseravatar'></div>
-		<div class='postuserbuddy'><a href='/buddies/KAL' class='tenpx greya'>Add Mayte</a></div>
-		<div class='postusermessage'><a href='/message?to=KAL' class='tenpx greya'>Send Message</a></div>
+		<div class='postuserbuddy'><a href='" . BASE_URL . "user/friends/add/" . $comment['user_id'] . "' class='tenpx greya'>Add Mayte</a></div>
+		<div class='postusermessage'><a href='" . BASE_URL . "inbox/new' class='tenpx greya'>Send Message</a></div>
 		</div>
 		<div class='postblock'>
 		<div class='post'>". nl2br($comment['comment']) ."</div>

@@ -42,14 +42,14 @@ if($_SESSION['user_id'] !== $user_id ) {
 print "<div id='proposts'>
     <h4>bookmarks:</h4>";
 	while($fav = mysql_fetch_array($favorites_set)){
-		print "<a href='thread.php?id=". $fav['favthread'] ."'>". $fav['favtitle'] . "</a><br />";
+		print "<a href='" . BASE_URL . "thread/". $fav['favthread'] . "/" . urlencode(stripslashes($fav['favtitle'])) ."'>". $fav['favtitle'] . "</a><br />";
 	}
 	print "<h4>mayties:</h4>";
 if($_GET['id'] == $_SESSION['user_id']){
 	while($maytie = mysql_fetch_array($mayties_set)){
 		if ($maytie['confirm'] == 0){
 			if($maytie['maytie_id'] == $_SESSION['user_id']){
-				print "<a href='profile.php?id=". $maytie['user_id'] ."'>". $maytie['username'] . "</a> did a request!";
+				print "<a href='" . BASE_URL . "user/profile/". $maytie['user_id'] ."'>". $maytie['username'] . "</a> did a request!";
 				print "<br /> accept as a friend?<br /><a href='" . BASE_URL . "/user/friends/accept/". $_SESSION['user_id']."' class='greya'>yeah!</a><br />";
 			} else{
 				print "you did a request<br />waiting on confirm by:<a href='profile.php?id=". $maytie['maytie_id'] ."'>".$maytie['maytiesname']."</a><br />";
@@ -59,7 +59,7 @@ if($_GET['id'] == $_SESSION['user_id']){
 }
 	while($maytie = mysql_fetch_array($maytie_info)){
 		if ($maytie['confirm'] == 1){
-				print "<a href='profile.php?id=". $maytie['user_id'] ."'>". $maytie['username'] . "</a>";
+				print "<a href='" . BASE_URL . "user/profile/". $maytie['user_id'] ."'>". $maytie['username'] . "</a>";
 		} else {
 			print "you got no friends";
 		}
@@ -70,7 +70,7 @@ if($_GET['id'] == $_SESSION['user_id']){
 <div id='culmright'>
 	<div id='proimg'>\n";
 	if(empty($picture)){
-	 print "<div class='nopic'><a href='imgupload.php' class='greya'>upload picture</a></div>";
+	 print "<div class='nopic'><a href='" . BASE_URL . "imgupload.php' class='greya'>upload picture</a></div>";
 	} else{
 		print "<img src='". BASE_URL . $picture ."' alt='Hey im ". $username ."' />\n";
 	}
