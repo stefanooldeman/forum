@@ -31,13 +31,20 @@ if(isset($_GET['p'])) {
 //todo move this to some request handler
 $file = '../app/views/' . $pageName . '.php';
 if(file_exists($file)) {
-
+	$output = '';
 	include_once("../app/layout/header.php");
 	include("../app/layout/sidebar.php");
+	//the above two go into output id will only be parsed if the main file gets fully executed ;)
+	ob_start();
 	include $file;
 	include("../app/layout/footer.php");
+	$output .= ob_get_contents();
+	ob_end_clean();
+	echo $output;
+
+
 } else {
 	header('Status: 404 Not Found');
 	trigger_error('The requested page is not found: ' . $file, E_USER_WARNING);
 }
-ob_flush();
+ob_end_flush();

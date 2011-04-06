@@ -49,16 +49,16 @@ if (isset($_POST['login'])) { // Form has been submitted.
 	$password = "";
 }
 
-print "
+$output .= "
 <div id='logo'><img src='" . MEDIA_URL . "images/audicious.jpg' alt='audicious.com' /></div>
 <div id='sidebar'>
 <div id='navuserlogin'>";
 if(!isset($_SESSION['user_id'])){
-	if (isset($loginmessage)){print"<div class='white' style='margin:1px;;width:177px;height:55px;'>". $loginmessage ."</div>";} else{print "<img src='" . MEDIA_URL . "images/notamember.jpg' />";}
-	print "<form action='' method='post'>
+	if (isset($loginmessage)){$output .= "<div class='white' style='margin:1px;;width:177px;height:55px;'>". $loginmessage ."</div>";} else{$output .= "<img src='" . MEDIA_URL . "images/notamember.jpg' />";}
+	$output .= "<form action='' method='post'>
 	<div class='white tenpx' style='margin-bottom:5px;'>
 	U: <input tabindex='1' name='username' maxlength='30' value='". htmlentities($username) ."' class='navlogininput' type='text' />
-	&nbsp;&nbsp;<input tabindex='3' value='Go For It!' type='submit' name='login' />				
+	&nbsp;&nbsp;<input tabindex='3' value='Go For It!' type='submit' name='login' />
 	</div>
 	<div class='white tenpx'>
 	P: <input tabindex='2' name='password' value='". htmlentities($password) ."' class='navlogininput' type='password' />
@@ -72,23 +72,23 @@ if(!isset($_SESSION['user_id'])){
 	confirm_query($read_set);
 	$numreaded = mysql_num_rows($read_set);
 
-	print "<h2 class='white'>Ahoy, <a href='" . BASE_URL . "user/profile/". $_SESSION['user_id'] ."'>". $_SESSION['username'] ."</a>!</h2>";
-	print"<ul>\n<li><a href='" . BASE_URL . "logout' class='tenpx offlinea'>sorry, i'm leaving!</a></li>";
+	$output .= "<h2 class='white'>Ahoy, <a href='" . BASE_URL . "user/profile/". $_SESSION['user_id'] ."'>". $_SESSION['username'] ."</a>!</h2>";
+	$output .= "<ul>\n<li><a href='" . BASE_URL . "logout' class='tenpx offlinea'>sorry, i'm leaving!</a></li>";
 
 	if($numreaded == 1) {
-		print "<li><a href='" . BASE_URL . "inbox' class='darkgreena'>1 New Message</a></li>";
+		$output .= "<li><a href='" . BASE_URL . "inbox' class='darkgreena'>1 New Message</a></li>";
 	} elseif($numreaded > 1) {
-		print "<li><a href='" . BASE_URL . "inbox' class='darkgreena'>".$numreaded." New Messages</a></li>";
+		$output .= "<li><a href='" . BASE_URL . "inbox' class='darkgreena'>".$numreaded." New Messages</a></li>";
 	} else {
-		print "<li><a href='" . BASE_URL . "inbox' class='darkgreena'>No Messages</a></li>";
+		$output .= "<li><a href='" . BASE_URL . "inbox' class='darkgreena'>No Messages</a></li>";
 	}
-	
-	print "</ul>\n";
+
+	$output .= "</ul>\n";
 }
 
-print "</div>";
+$output .= "</div>";
 
-print "<div id='threadnav'>
+$output .= "<div id='threadnav'>
 	<img src='" . MEDIA_URL . "images/h1.threads.png' width='198' usemap='#threads' />
 	<map name='threads' id='threads'><area shape='rect' coords='0,0,198,20' href='" . BASE_URL . "threads' alt='threads' /></map>
 	<div class='browndot'/><span></span></div>
@@ -101,7 +101,7 @@ print "<div id='threadnav'>
 </div>";
 
 if(isset($_SESSION['user_id'])){
- print "<div id='usernav'>
+ $output .= "<div id='usernav'>
 		<img src='" . MEDIA_URL . "images/h1.hometown.png' width='198' usemap='#hometown' />
 		<map name='hometown' id='hometown'><area shape='rect' coords='0,0,198,20' href='" . BASE_URL . "user/profile/" . $_SESSION['user_id'] . "' alt='profile page' /></map>
        	<div class='browndot'/><span></span></div>
@@ -126,6 +126,6 @@ if(isset($_SESSION['user_id'])){
         'sepie elevenpx'>|</span><a href='#' class='onlinea'>cobus300</a>
         </div>";
 }
-print "</div>";
+$output .= "</div>";
 
 
