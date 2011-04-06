@@ -1,2 +1,2 @@
-includes/config_mirror.php
-uploads/*
+app/config_mirror.php
+web/media/uploads/*

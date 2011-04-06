@@ -2,6 +2,8 @@ AddDefaultCharset UTF-8
 
 RewriteEngine On
 
+RewriteBase /web/
+
 # deny other requests than GET and POST
 RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK|OPTIONS|HEAD) [NC]
 RewriteRule .* - [F]
