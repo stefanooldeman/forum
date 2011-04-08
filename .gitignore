@@ -1,2 +1,5 @@
+app/config_mirror.php
 includes/config_mirror.php
 uploads/*
+vendor/*
+src/Symfony/*
