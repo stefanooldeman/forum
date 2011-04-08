@@ -8,10 +8,10 @@ if(true) {
 require "../app/includes/connection.php";
 include "../app/includes/functions.php";
 include "../app/includes/form_functions.php";
-require "../app/includes/session.php";
 
 //todo move this to some request handler
 require '../autoload.php';
+require '../app/bootstrap.php';
 
 //remove empty GET values from the list
 foreach($_GET as $key => $value) {
