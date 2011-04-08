@@ -1,4 +1,5 @@
 <?php
+ob_start();
 if(true) {
 	include '../app/config_mirror.php';
 } else {
@@ -27,6 +28,7 @@ if(isset($_GET['p'])) {
 	$pageName = 'thread';
 }
 
+//todo move this to some request handler
 $file = '../app/views/' . $pageName . '.php';
 if(file_exists($file)) {
 
@@ -38,3 +40,4 @@ if(file_exists($file)) {
 	header('Status: 404 Not Found');
 	trigger_error('The requested page is not found: ' . $file, E_USER_WARNING);
 }
+ob_flush();
