@@ -29,11 +29,3 @@ $session = $sc->get('session_class');
 
 $sc->register('aut_class', 'Audicious\Util\Authentication')
 	->addMethodCall('setSessionStorage', array($sc->get('session_class')));
-
-//EXPIRIMENTAL
-//namspaces are hatius when using singelton like these
-//lets over think it and use this with an include
-//Or use namespace each time we call this static methods.. (not funny)
-//use Audicious\Util\Registry as Registry;
-require '../src/Audicious/Util/Registry.php';
-Registry::set('service', $sc);
