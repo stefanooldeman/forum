@@ -1,5 +1,8 @@
 <?php
 
+//Get user class from registry
+$user = Registry::get('service')->get('user_class');
+
 $categories = array(1 => 'discussions', 2 => 'projects', 3 => 'advice', 4 => 'meaningless');
 if(isset($_GET['category']) && in_array($_GET['category'], $categories)) {
 	$list = array_flip($categories);
