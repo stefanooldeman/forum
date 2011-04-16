@@ -10,5 +10,6 @@ $mysql = array(
 const BASE_URL	= 'http://local.forum/web/';
 const MEDIA_URL = 'http://local.forum/web/media/';
 
+const SYS_SALT	= 'MySecret'; //you get the idea ;)
 ini_set('error_log', 'php_error.log');
 ini_set('display_errors', 0);

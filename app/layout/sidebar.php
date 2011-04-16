@@ -1,52 +1,51 @@
 <?php
-// START FORM PROCESSING
-if (isset($_POST['login'])) { // Form has been submitted.
-	$errors = array();
+$username = '';
+$loginmessage = null;
+$errors = array();
+if(isset($_POST['login'])) {
+	// Form has been submitted.
+	$errors = array_merge($errors, check_required_fields(array('username', 'password'), $_POST));
+	$errors = array_merge($errors, check_max_field_lengths(array('username' => 30, 'password' => 30), $_POST));
 
-	// perform validations on the form data
-	$required_fields = array('username', 'password');
-	$errors = array_merge($errors, check_required_fields($required_fields, $_POST));
+	$username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
+	$passwordRaw = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+	$password = hash('sha256', SYS_SALT . $passwordRaw);
+	unset($passwordRaw);
 
-	$fields_with_lengths = array('username' => 30, 'password' => 30);
-	$errors = array_merge($errors, check_max_field_lengths($fields_with_lengths, $_POST));
-
-	$username = trim(mysql_prep($_POST['username']));
-	$password = trim(mysql_prep($_POST['password']));
-	$hashed_password = sha1($password);
-
-	if(empty($errors)){
+	if(is_array($errors) && count($errors) == 0) {
 		// Check database to see if username and the hashed password exist there.
-		$query = "SELECT id, username ";
-		$query .= "FROM users ";
-		$query .= "WHERE username = '{$username}' ";
-		$query .= "AND hashed_password = '{$hashed_password}' ";
-		$query .= "LIMIT 1";
+		$query = 'SELECT u.id, u.username
+			FROM users u
+			WHERE u.username = "' . $username . '" AND password = "' . $password . '"
+			LIMIT 1';
+
 		$result_set = mysql_query($query);
 		confirm_query($result_set);
+
 		if(mysql_num_rows($result_set) == 1) {
 			// username/password authenticated
 			// and only 1 match
 			$found_user = mysql_fetch_array($result_set);
 			$_SESSION['user_id'] = $found_user['id'];
 			$_SESSION['username'] = $found_user['username'];
-
-			error_log('logged in');
-//			$_SESSION['username'] = $found_user['username'];
 		} else {
 			// username/password combo was not found in the database
 			$loginmessage = " I'm sorry this combination won't work for you, perhaps your CapsLock is on?";
 		}
-	} else{
-		if (count($errors) == 1) {
+
+	} else {
+
+		if(count($errors) == 1) {
 			$loginmessage = " Sorry, you really need to fill in 2 fields!";
 		} else {
 			$loginmessage = "WTF? Why are you poking in the air";
 		}
 	}
-
-} else { // Form has not been submitted.
-	$username = "";
-	$password = "";
+	unset($_POST);
+	//prevent Form Resubmission
+}
+if(!isset($_POST['login']) || (is_array($errors) && count($errors) > 0) || $loginmessage != null) {
+	$password = '';
 }
 
 $output .= "
