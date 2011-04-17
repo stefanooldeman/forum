@@ -2,6 +2,8 @@
 $username = '';
 $loginmessage = null;
 $errors = array();
+$authClass = clone $sc->get('auth_class');
+
 if(isset($_POST['login'])) {
 	// Form has been submitted.
 	$errors = array_merge($errors, check_required_fields(array('username', 'password'), $_POST));
@@ -23,11 +25,11 @@ if(isset($_POST['login'])) {
 		confirm_query($result_set);
 
 		if(mysql_num_rows($result_set) == 1) {
-			// username/password authenticated
-			// and only 1 match
 			$found_user = mysql_fetch_array($result_set);
-			$_SESSION['user_id'] = $found_user['id'];
-			$_SESSION['username'] = $found_user['username'];
+			$authClass->authenticate();
+			$authClass->setValue('id', $found_user['id']);
+			$authClass->setValue('username', $found_user['username']);
+			redirect_to('index');
 		} else {
 			// username/password combo was not found in the database
 			$loginmessage = " I'm sorry this combination won't work for you, perhaps your CapsLock is on?";
@@ -52,7 +54,7 @@ $output .= "
 <div id='logo'><img src='" . MEDIA_URL . "images/audicious.jpg' alt='audicious.com' /></div>
 <div id='sidebar'>
 <div id='navuserlogin'>";
-if(!isset($_SESSION['user_id'])){
+if(!$authClass->hasIdentity()) {
 	if (isset($loginmessage)){$output .= "<div class='white' style='margin:1px;;width:177px;height:55px;'>". $loginmessage ."</div>";} else{$output .= "<img src='" . MEDIA_URL . "images/notamember.jpg' />";}
 	$output .= "<form action='' method='post'>
 	<div class='white tenpx' style='margin-bottom:5px;'>
@@ -65,13 +67,17 @@ if(!isset($_SESSION['user_id'])){
 	</div>
 	</form>";
 } else {
-	$user_id = $_SESSION['user_id'];
-	$query = "SELECT id FROM inbox WHERE readed = 0 AND user_id = $user_id";
+	$userId = $authClass->getValue('id');
+	$username = $authClass->getValue('username');
+
+	$query = 'SELECT COUNT(1)
+		FROM inbox
+		WHERE readed = 0 AND user_id = ' . (integer) $userId;
 	$read_set = mysql_query($query, $connection);
 	confirm_query($read_set);
 	$numreaded = mysql_num_rows($read_set);
 
-	$output .= "<h2 class='white'>Ahoy, <a href='" . BASE_URL . "user/profile/". $_SESSION['user_id'] ."'>". $_SESSION['username'] ."</a>!</h2>";
+	$output .= "<h2 class='white'>Ahoy, <a href='" . BASE_URL . "user/profile/". $userId ."'>". $username ."</a>!</h2>";
 	$output .= "<ul>\n<li><a href='" . BASE_URL . "logout' class='tenpx offlinea'>sorry, i'm leaving!</a></li>";
 
 	if($numreaded == 1) {
@@ -99,13 +105,13 @@ $output .= "<div id='threadnav'>
 	</ul>
 </div>";
 
-if(isset($_SESSION['user_id'])){
+if($authClass->hasIdentity()) {
  $output .= "<div id='usernav'>
 		<img src='" . MEDIA_URL . "images/h1.hometown.png' width='198' usemap='#hometown' />
-		<map name='hometown' id='hometown'><area shape='rect' coords='0,0,198,20' href='" . BASE_URL . "user/profile/" . $_SESSION['user_id'] . "' alt='profile page' /></map>
+		<map name='hometown' id='hometown'><area shape='rect' coords='0,0,198,20' href='" . BASE_URL . "user/profile/" . $userId . "' alt='profile page' /></map>
        	<div class='browndot'/><span></span></div>
         <ul>
-            <li><a href='" . BASE_URL . "user/profile/" . $_SESSION['user_id'] . "' class='darkgreena'>My acount</a></li>
+            <li><a href='" . BASE_URL . "user/profile/" . $userId . "' class='darkgreena'>My acount</a></li>
             <li><a href='" . BASE_URL . "inbox' class='darkgreena'>Inbox</a></li>
             <li><a href='' class='darkgreena'>Preferences</a></li>
 			<li><a href='" . BASE_URL . "thread/new' class='darkgreena'>Post Thread</a></li>
@@ -116,7 +122,7 @@ if(isset($_SESSION['user_id'])){
       <img src='" . MEDIA_URL . "images/h1.mayties.png' width='198' border='0px' />
        	<div class='browndot'/><span></span></div>
 		<p class='white elevenpx'>
-            You a.k.a. <strong><a href='#' class='user'>cobus300</a></strong> have 12 mayties. 7 of those are gurls and
+            You a.k.a. <strong><a href='#' class='user'>" . $username . "</a></strong> have 12 mayties. 7 of those are gurls and
             the other 5 are guys. There are  <span class='onlinea'>3</span> maytes <span class='onlinea'>online</span>
         </p>
 	</div>
