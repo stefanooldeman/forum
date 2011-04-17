@@ -14,6 +14,8 @@ include "../app/includes/form_functions.php";
 require '../autoload.php';
 require '../app/bootstrap.php';
 
+$_POST = (array) filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+$_GET = (array) filter_input_array(INPUT_GET, FILTER_SANITIZE_STRING);
 //remove empty GET values from the list
 foreach($_GET as $key => $value) {
 	if($value === '') {
