@@ -151,7 +151,7 @@ if(isset($threadId)){
 	There are {$numrow} reply's";
 	}
 	print "<br />";
-	per_page("?id=". $threadId ."&page=%page", "7");
+	per_page(BASE_URL . 'thread/' . $threadId . '/page/%page', '7');
 
 	print "<div class='orangeline'><span></span></div>";
 	while ($comment = mysql_fetch_array($comment_set)) {
