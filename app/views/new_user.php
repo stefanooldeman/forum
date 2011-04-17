@@ -3,8 +3,9 @@ include_once 'includes/config_mirror.php';
 require_once("includes/session.php");
 require_once("includes/connection.php");
 require_once("includes/functions.php");
-confirm_logged_in();
-
+if(!$authClass->hasIdentity()) {
+	redirect_to('index');
+}
 include_once("includes/form_functions.php");
 
 // START FORM PROCESSING

@@ -1,23 +1,27 @@
 <?php
-require_once("includes/session.php"); 
+require_once("includes/session.php");
 require_once("includes/connection.php");
 include_once("includes/functions.php");
-confirm_logged_in(); 
+
+if(!$authClass->hasIdentity()) {
+	redirect_to('index');
+}
+
 if(isset($_POST['submit'])){
 	$fieldnames = array('title', 'status', 'comment');
 	foreach($fieldnames as $postfield){
 		$$postfield = mysql_prep($_POST[$postfield]);
 	}
 
-	include_once("includes/form_functions.php");	
+	include_once("includes/form_functions.php");
 	$errors = array();
 	$required_fields = array('title', 'comment');
-	
+
 	$errors = array_merge($errors, check_required_fields($required_fields));
 	$fields_with_lengths = array('title' => 70);
-	
+
 	$errors = array_merge($errors, check_max_field_lengths($fields_with_lengths));
-	
+
 	if(empty($errors)){
 } else{
 	if (count($errors) == 1) {
@@ -57,7 +61,7 @@ print "<h1>Some administration</h1>
 </div>
   <h4>lvl 3./Profile image:</h4>
   <p>you can upload a profile picture <a href=''>here!</a></p>
-  
+
 <h4>lvl 4./Personal information (not public):</h4>
 <div class='composefield'>
   <p>first name:</p>

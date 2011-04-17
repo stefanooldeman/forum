@@ -30,6 +30,9 @@ if(isset($_GET['p'])) {
 	$pageName = 'thread';
 }
 
+//these are used allot..
+$authClass = $sc->get('auth_class');
+
 //todo move this to some request handler
 $file = '../app/views/' . $pageName . '.php';
 if(file_exists($file)) {
