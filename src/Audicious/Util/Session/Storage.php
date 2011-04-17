@@ -32,7 +32,14 @@ class Storage {
 			}
 		}
 	}
-	
+
+	/**
+	 * set the namespace to work with to prevent creating it.
+	 */
+	public function setNamespace($namespace) {
+		$this->namespace = $namespace;
+	}
+
 	public static function get($namespace) {
 		if(!isset($_SESSION[self::$prefix][$namespace])) {
 			trigger_error('requested namespace in ' . __METHOD__ . ' returned empty value because the namespace was not set ', \E_USER_NOTICE);
@@ -41,9 +48,9 @@ class Storage {
 		return (object) $_SESSION[self::$prefix][$namespace];
 	}
 
-	public function factory($namespace = 'Default') {
+	public function create($namespace = 'Default') {
 		$this->loadPrefix();
-		
+
 		if($namespace == '' || $namespace[0] == '_') {
 			throw new Exception('invalid namespace name');
 		}
@@ -52,7 +59,7 @@ class Storage {
 		if(in_array($this->namespace, self::$registry)) {
 			throw new SessionException('namespace already in regestry and in use');
 		}
-		
+
 		if(!isset($_SESSION[self::$prefix][$this->namespace])) {
 
 			$_SESSION[self::$prefix][$this->namespace] = array(
@@ -64,7 +71,7 @@ class Storage {
 			$_SESSION[self::$prefix]['_registry'][$this->namespace] = true;
 		}
 		self::$registry[] = $this->namespace;
-		
+
 		return $this;
 	}
 
@@ -72,7 +79,6 @@ class Storage {
 		if(!isset($_SESSION[self::$prefix][$namespace])) {
 			return;
 		}
-		var_dump($_SESSION);
 		unset($_SESSION[self::$prefix][$namespace]);
 	}
 
@@ -81,18 +87,15 @@ class Storage {
 	}
 
 	public function & __get($name) {
-		if($name == null) {
-			if($_SESSION[self::$prefix]['_registry'][$this->namespace] === false) {
-				return null;
-			}
-			return $_SESSION[self::$prefix][$this->namespace];
-		} else {
-			return $_SESSION[self::$prefix][$this->namespace]['data'][$name];
-		}
+		return $_SESSION[self::$prefix][$this->namespace]['data'][$name];
 	}
 
-	public function __set($key, $val) {
-		$_SESSION[self::$prefix][$this->namespace]['data'][$key] = $val;
+	public function __set($key, $value) {
+		$_SESSION[self::$prefix][$this->namespace]['data'][$key] = $value;
+	}
+
+	public function __isset($namespace) {
+		return isset($_SESSION[self::$prefix][$namespace]);
 	}
 
 }

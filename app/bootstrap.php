@@ -27,5 +27,9 @@ $sc->register('session_class', 'Audicious\Util\Session')
 
 $session = $sc->get('session_class');
 
-$sc->register('aut_class', 'Audicious\Util\Authentication')
-	->addMethodCall('setSessionStorage', array($sc->get('session_class')));
+$authOptions = array('namespace' => 'user');
+$sc->register('auth_class', 'Audicious\Util\Authentication')
+	->addMethodCall('setSession', array($sc->get('session_class')))
+	->setConfigurator($sc->get('auth_class')->configureSession($authOptions));
+
+
