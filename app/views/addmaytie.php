@@ -1,5 +1,7 @@
 <?php
-confirm_logged_in(); 
+if(!$authClass->hasIdentity()) {
+	redirect_to('index');
+}
 
 if(isset($_GET['action'])){
 	$action = $_GET['action'];
@@ -9,19 +11,18 @@ if(isset($_GET['action'])){
 	redirect_to('threads');
 }
 
-$user_id = $_SESSION['user_id'];
-$username = $_SESSION['username'];
+$user_id = $authClass->getValue('id')
+$username = $authClass->getValue('username');
 
 if(intval($_GET['id']) && $action == "add"){
 	$user_id = $_GET['id'];
 	$query = "SELECT * FROM users WHERE id = {$user_id} ";
 	$users = mysql_query($query, $connection);
 	confirm_query($query);
-	
+
 	while ($user = mysql_fetch_array($users)){
 	$maytiesname = $user['username'];}
 	$maytie_id = $_GET['id'];
-	$user_id = $_SESSION['user_id'];
 	$query  = "INSERT INTO mayties (  ";
 	$query  .= "maytie_id, maytiesname, user_id, username, date  ";
 	$query  .= ") VALUES (  ";

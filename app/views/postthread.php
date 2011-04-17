@@ -1,36 +1,36 @@
 <?php
-confirm_logged_in(); 
+if(!$authClass->hasIdentity()) {
+	redirect_to('index');
+}
 if(isset($_POST['submit'])) {
 	$fieldnames = array('title', 'status', 'comment');
 	foreach($fieldnames as $postfield){
 		$$postfield = mysql_prep($_POST[$postfield]);
 	}
-	$user_id = $_SESSION['user_id'];
-	$post_by = $_SESSION['username'];
+	$user_id = $authClass->getValue('id');
+	$post_by = $authClass->getValue('username');
 	$category = $_POST['category'];
 	$current_time = date("y\\-m\\-d H\\:i\\:s");
-	
+
 	$errors = array();
 	$required_fields = array('title', 'comment');
-	
+
 	$errors = array_merge($errors, check_required_fields($required_fields));
 	$fields_with_lengths = array('title' => 120);
-	
+
 	$errors = array_merge($errors, check_max_field_lengths($fields_with_lengths));
-	
+
 	if(empty($errors)){
 	$query  = "INSERT INTO thread ( ";
 	$query .= "title, user_id, post_by, category ,status, startdate, lastdate ";
 	$query .= " )VALUES( ";
 	$query .= "'{$title}', '{$user_id}', '{$post_by}', '{$category}', '{$status}', '{$current_time}', '{$current_time}' )";
-	
-	if(@mysql_query($query)){
-	$user_id = $_SESSION['user_id'];
+
+	if(@mysql_query($query)) {
 	$thread_id = mysql_insert_id();
 	$comment = $_POST['comment'];
-	$post_by = $_SESSION['username'];
-	
-	
+
+
 			 $sub_query  ="INSERT INTO comment ( ";
 			 $sub_query .="thread_id, user_id, post_by, comment ";
 			 $sub_query .=") VALUES ( ";
@@ -62,7 +62,7 @@ print "<h1>Got something to tell ?</h1>
 <h4>lvl 1./Choose a catogory:</h4>
 <div class='btn'>
 <input tabindex='6' type='radio' name='category' value='1' checked /><span class='white'> Discussion</span>
-<input tabindex='6' type='radio' name='category' value='2' /><span class='white'> Projects</span> 
+<input tabindex='6' type='radio' name='category' value='2' /><span class='white'> Projects</span>
 <input tabindex='6' type='radio' name='category' value='3' /><span class='white'> Advice</span>
 <input tabindex='6' type='radio' name='category' value='4' /><span class='white'> Meaningless</span>
 </div>

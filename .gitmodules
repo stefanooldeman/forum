@@ -1,3 +1,9 @@
-[submodule "library/swiftmailer"]
-	path = library/swiftmailer
+[submodule "vendor/swiftmailer"]
+	path = vendor/swiftmailer
 	url = https://github.com/swiftmailer/swiftmailer.git
+[submodule "src/Symfony/Component/ClassLoader"]
+	path = src/Symfony/Component/ClassLoader
+	url = https://github.com/symfony/ClassLoader.git
+[submodule "src/Symfony/Component/DependencyInjection"]
+	path = src/Symfony/Component/DependencyInjection
+	url = https://github.com/symfony/DependencyInjection.git

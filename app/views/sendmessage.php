@@ -1,45 +1,54 @@
 <?php
-confirm_logged_in(); 
-if(isset($GET['id'])){}
-if(isset($_POST['submit'])){
+if(!$authClass->hasIdentity()) {
+	redirect_to('index');
+}
+$userId = $authClass->getValue('id');
+
+if(isset($_POST['submit'])) {
 	$errors = array();
 	$required_fields = array('recieved', 'title', 'comment');
-	
+
 	$errors = array_merge($errors, check_required_fields($required_fields));
 	$fields_with_lengths = array('title' => 40);
-	
+
 	$errors = array_merge($errors, check_max_field_lengths($fields_with_lengths));
-	
+
 	$fieldnames = array('title', 'comment');
 	foreach($fieldnames as $postfield){
 		$$postfield = mysql_prep($_POST[$postfield]);
 	}
-	if(empty($errors)){
-	$query = "SELECT * FROM users WHERE username = '{$_POST['recieved']}' LIMIT 1";
-	$users = mysql_query($query, $connection);
-	confirm_query($query);
-	$numrow = mysql_num_rows($users);
-	
-	while ($user = mysql_fetch_array($users)){
+
+	if(empty($errors)) {
+		$query = "SELECT * FROM users WHERE username = '{$_POST['recieved']}' LIMIT 1";
+		$users = mysql_query($query, $connection);
+		confirm_query($query);
+		$numrow = mysql_num_rows($users);
+
+		while($user = mysql_fetch_array($users)) {
 			$post_by = $user['id'];
-	}
-	$recieved = $_SESSION['user_id'];
-	$query  = "INSERT INTO inbox ( ";
-	$query .= "subject, user_id, post_by, message ";
-	$query .= " )VALUES( ";
-	$query .= "'{$title}', '{$post_by}', '{$recieved}', '{$comment}' )";
-	
-	if(@mysql_query($query)){ $message = "<a href='" . BASE_URL . "inbox'>Wel done you made it!</a>"; } else{$message = "wtf happend. contact some admin!"; print $sub_query . mysql_error();}
-} else{
-	if (count($errors) == 1) {
-		$message = "You fool, you forgot a field.";
+		}
+		$recieved = $userId;
+		$query  = "INSERT INTO inbox ( ";
+		$query .= "subject, user_id, post_by, message ";
+		$query .= " )VALUES( ";
+		$query .= "'{$title}', '{$post_by}', '{$recieved}', '{$comment}' )";
+
+		if(@mysql_query($query)) {
+			$message = "<a href='" . BASE_URL . "inbox'>Wel done you made it!</a>";
+		} else {
+			$message = "wtf happend. contact some admin!"; print $sub_query . mysql_error();
+		}
+
+	} else {
+		if (count($errors) == 1) {
+			$message = "You fool, you forgot a field.";
 		} elseif((count($errors) > 1)){
-		$message = "You fool, you forgot " . count($errors) . " fields.";
+			$message = "You fool, you forgot " . count($errors) . " fields.";
 		}
 	}
 }
 
-$query = "SELECT * FROM mayties WHERE user_id = '{$_SESSION['user_id']}'";
+$query = "SELECT * FROM mayties WHERE user_id = '{$userId}'";
 $mayties = mysql_query($query, $connection);
 confirm_query($query);
 
@@ -67,7 +76,7 @@ print "<h1>Send a messages</h1>
 		if($numrow == 1){print "<a href=\"javascript:addToRecipients('". $maytie['maytiesname'] ."')\">+&nbsp;". $maytie['maytiesname'] ."</a>";}
 		elseif($numrow == 0){print "";}
 		else{print "<a href=\"javascript:addToRecipients('". $maytie['maytiesname'] ."')\">+&nbsp;". $maytie['maytiesname'] ."</a>, ";}
-			
+
 	}
 print "</div>
 <h4>lvl 2./Subject:</h4>

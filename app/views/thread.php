@@ -1,5 +1,4 @@
 <?php
-
 $categories = array(1 => 'discussions', 2 => 'projects', 3 => 'advice', 4 => 'meaningless');
 if(isset($_GET['category']) && in_array($_GET['category'], $categories)) {
 	$list = array_flip($categories);
@@ -8,15 +7,13 @@ if(isset($_GET['category']) && in_array($_GET['category'], $categories)) {
 }
 
 if(isset($_GET['id'])) {
-	$threadId = (int) filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+	$threadId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 }
 
-//edit on: 2009-10-21 (first since 2 years)
-//changed a few querys they were so ... old fashioned!
 $query = "SELECT DATE_FORMAT(`startdate`, '%b %d %y @ %h:%i%p') AS date FROM thread ORDER BY id DESC ";
 
 if(!$date_set2 = mysql_query($query, $connection)){
-	exit(mysql_error());
+	trigger_error('query error: ' . $query . "\n" . mysql_error() . ' EOM.', E_USER_ERROR);
 }
 
 $dates2 = mysql_fetch_array($date_set2);
@@ -102,8 +99,9 @@ confirm_query($info);
 
 // ---------------------------------------------------------------------------------------------------------validating submitted forms
 if(isset($_POST['submit'])){
-	confirm_logged_in();
-	include_once("includes/form_functions.php");
+	if(!$authClass->hasIdentity()) {
+		redirect_to('index');
+	}
 
 	$errors = array();
 	$required_fields = array('comment');
@@ -115,27 +113,25 @@ if(isset($_POST['submit'])){
 
 
 	$comment = mysql_prep($_POST['comment']);
-	$thread_id = $threadId;
-	$post_by = $_SESSION['username'];
-	$user_id = $_SESSION['user_id'];
+	$userId = $authClass->getValue('id');
+	$username = $authClass->getValue('username');
 
-	if (empty($errors)){
-	$query  = "INSERT INTO comment ( ";
-	$query .= "thread_id, post_by, user_id, comment ";
-	$query .= ") VALUES ( ";
-	$query .= "'{$thread_id}', '{$post_by}', {$user_id}, '{$comment}') ";
-	//$query .= "WHERE thread_id = {$threadId}";
+	if(empty($errors)) {
+		$query = 'INSERT INTO comment
+			(thread_id, post_by, user_id, comment )
+			VALUES
+			("' . $threadId . '","' . $username . '",  "' . $userId . '", "' . $comment . '") ';
 
-	if(@mysql_query($query)){
-		redirect_to('thread/' . $threadId);
-	} else{
-		print "<li class='error'>Bericht is niet opgeslagen: <b>".mysql_error()."</b></i>\n<br />\n<li>Query :".$query ."</li>";
-	}
-	} else{
-	if (count($errors) == 1) {
-		$message = "There was 1 error in the form.";
+		if(mysql_query($query)) {
+			redirect_to('thread/' . $threadId);
+		} else {
+			print "<li class='error'>Bericht is niet opgeslagen: <b>".mysql_error()."</b></i>\n<br />\n<li>Query :".$query ."</li>";
+		}
+	} else {
+		if(count($errors) == 1) {
+			$message = "There was 1 error in the form.";
 		} elseif((count($errors) > 1)){
-		$message = "There were " . count($errors) . " errors in the form.";
+			$message = "There were " . count($errors) . " errors in the form.";
 		}
 	}
 }
@@ -147,11 +143,10 @@ if(isset($threadId)){
 	//head info
 
 	while ($heading = mysql_fetch_array($info_set)){
-	print "<h2 class='pagetitle'>". $heading['title'] ."</h3>
-	There are {$numrow} reply's";
+		print "<h2 class='pagetitle'>". $heading['title'] ."</h2> There are {$numrow} reply's";
 	}
 	print "<br />";
-	per_page("?id=". $threadId ."&page=%page", "7");
+	per_page(BASE_URL . 'thread/' . $threadId . '/page/%page', '7');
 
 	print "<div class='orangeline'><span></span></div>";
 	while ($comment = mysql_fetch_array($comment_set)) {
@@ -166,10 +161,8 @@ if(isset($threadId)){
 		<div class='post'>". nl2br($comment['comment']) ."</div>
 		</div>
 		<div class='postoptions'>";
-		if(isset($_SESSION['user_id'])){
-			if($comment['post_by'] == $_SESSION['username']){
+		if($authClass->hasIdentity() && ($comment['user_id'] == $authClass->getValue('id'))) {
 			print "<a href='edit.php?id={$comment['id']}'>edit</a>";
-			}
 		}
 		print "</div>
 		<div class='postseperator'><span></span></div>
@@ -182,7 +175,7 @@ if(isset($threadId)){
 
 if (!empty($message)){ 	print "<p class='error'>" . $message . "</p>";}
 if (!empty($errors)){ display_errors($errors);}
-	print "<form action='thread.php?id={$threadId}' method='post'>";
+	print "<form method='post'>";
 
 	print "   <label for='comment-text'>comment:</label><br />";
 	print "  <textarea tabindex='4' type='text' id='comment-text' name='comment' rows='10' cols='50'></textarea><br /><br />";
