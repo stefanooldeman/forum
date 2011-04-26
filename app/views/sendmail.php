@@ -1,14 +1,10 @@
 <?php
 include 'includes/config_mirror.php';
-require_once("includes/session.php"); 
+require_once("includes/session.php");
 require_once("includes/connection.php");
 include_once("includes/functions.php");
 
-if(isset($_GET['action'])) {
-	$action = $_GET['action'];
-} else {
-//	redirect_to('threads');
-}
+$action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
 
 //----------------------------------------user info
 $name = "stefano";
@@ -18,7 +14,7 @@ $company = "audicious.com";
 $mailto = 'stefano.oldeman@gmail.com';
 /*
 $mktime = date("%X");
-$date = date("%a ".."", $mktime); 
+$date = date("%a ".."", $mktime);
 */
 //------------------------------------------mail info
 
@@ -32,9 +28,9 @@ if($action == "pm") {
 	$mail  = "hi $name\n\n";
 	$mail .= "$from wrote a pm to you.\n\nView it in your inbox at\n $inbox\n\n";
 	$mail .= "Greetings the email monkey @ $company";
-	
+
 	exit(var_dump($mailto, $subject, $mail, $headers));
-	
+
 	if(mail($mailto, $subject, $mail, $headers)) {
 		print "A mail has been send to your pal!";
 	} else {

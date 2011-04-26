@@ -13,10 +13,11 @@ confirm_query($read_set);
 $numreaded = mysql_num_rows($read_set);
 
 $query = "SELECT user_id, DATE_FORMAT(date, '%b %d %y @ %h:%i%p') AS date FROM inbox ";
-if(isset($_GET['id'])){
-$query .= "WHERE id =  '{$_GET['id']}' LIMIT 1";
+$messageId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+if(isset($messageId)) {
+	$query .= "WHERE id =  '{$messageId}' LIMIT 1";
 } else {
-$query .= "WHERE user_id =  $user_id ORDER BY date DESC";
+	$query .= "WHERE user_id =  $user_id ORDER BY date DESC";
 }
 
 $date_set = mysql_query($query, $connection);
@@ -35,20 +36,20 @@ print "<div id='inboxoptions'>
 <li style='margin-right:2px;'><img src='" . MEDIA_URL . "images/email.png' /></li><li><a href='" . BASE_URL . "inbox' class='bluea'>inbox</a></li>
 <li style='margin-right:2px;'><img src='" . MEDIA_URL . "images/comment_edit.png' /></li><li><a href='" . BASE_URL . "inbox/new' class='bluea'>Create pm</a></li>
 <li style='margin-right:2px;'><img src='" . MEDIA_URL . "images/bin.png' /></li><li><a href='' class='bluea'>Trash Can</a></li>";
-if(isset($_GET['id'])){
-	print "<li style='margin-right:2px;'><img src='" . MEDIA_URL . "images/email_delete.png' /></li><li><a href='" . BASE_URL . "inbox/delete/". $_GET['id'] ."' class='bluea'>Delete</a></li>";
+if(isset($messageId)){
+	print "<li style='margin-right:2px;'><img src='" . MEDIA_URL . "images/email_delete.png' /></li><li><a href='" . BASE_URL . "inbox/delete/". $messageId ."' class='bluea'>Delete</a></li>";
 }
 print "</ul>
 </div>";
-if(isset($_GET['id'])){
-	$query = "SELECT * FROM inbox WHERE id = '{$_GET['id']}' LIMIT 1";
+if(isset($messageId)){
+	$query = "SELECT * FROM inbox WHERE id = '{$messageId}' LIMIT 1";
 	$info_set = mysql_query($query, $connection);
 	confirm_query($inbox_set);
 
 	while ($inbox = mysql_fetch_array($info_set)){
 
 		if($inbox['readed'] == 0){
-			$query = "UPDATE inbox SET readed = 1, date = '{$inbox['date']}' WHERE id = {$_GET['id']}";
+			$query = "UPDATE inbox SET readed = 1, date = '{$inbox['date']}' WHERE id = {$messageId} ";
 			$result = mysql_query($query, $connection);
 			if (mysql_affected_rows() == 0) {print "error, there broke something in the system";}
 		}

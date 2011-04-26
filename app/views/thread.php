@@ -1,14 +1,16 @@
 <?php
+$categoryName = filter_input(INPUT_GET, 'category', FILTER_SANITIZE_STRIPPED);
+$threadId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+$pageNr = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
+
+$pageNavUrl = BASE_URL . 'thread' . (isset($threadId) ? 's' : '') . '/page/%page';
+
 $categories = array(1 => 'discussions', 2 => 'projects', 3 => 'advice', 4 => 'meaningless');
-if(isset($_GET['category']) && in_array($_GET['category'], $categories)) {
+if(isset($categoryName) && in_array($categoryName, $categories)) {
 	$list = array_flip($categories);
-	$val = filter_input(INPUT_GET, 'category', FILTER_SANITIZE_STRING);
-	$categoryId = $list[$val];
+	$categoryId = $list[$categoryName];
 }
 
-if(isset($_GET['id'])) {
-	$threadId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-}
 
 $query = "SELECT DATE_FORMAT(`startdate`, '%b %d %y @ %h:%i%p') AS date FROM thread ORDER BY id DESC ";
 
@@ -30,10 +32,10 @@ if(isset($threadId)) {
 	$total = mysql_num_rows($pages_set);
 	$numofpages = $total / $pp;
 
-	if (!isset($_GET['page'])) {
+	if (!isset($pageNr)) {
 		$page = 1;
 	} else {
-		$page = $_GET['page'];
+		$page = $pageNr;
 	}
 	$limitvalue = $page * $pp - ($pp);
 
@@ -56,10 +58,10 @@ if(isset($threadId)) {
 	$pages_set = mysql_query($query);
 	$total = mysql_num_rows($pages_set);
 	$numofpages = $total / $pp;
-	if (!isset($_GET['page'])) {
+	if(!isset($pageNr)) {
 		$page = 1;
 	} else {
-		$page = $_GET['page'];
+		$page = $pageNr;
 	}
 	$limitvalue = $page * $pp - ($pp);
 
@@ -71,11 +73,10 @@ if(isset($threadId)) {
 		$pages_set = mysql_query($query);
 		$total = mysql_num_rows($pages_set);
 		$numofpages = $total / $pp;
-		if (!isset($_GET['page'])) {
-		$page = 1;
-		}
-		else {
-		$page = $_GET['page'];
+		if(!isset($pageNr)) {
+			$page = 1;
+		} else {
+			$page = $pageNr;
 		}
 
 		$listthreads = "SELECT * FROM thread WHERE category = " . $categoryId . " ORDER BY id DESC LIMIT $limitvalue, $pp";
@@ -112,7 +113,7 @@ if(isset($_POST['submit'])){
 	$errors = array_merge($errors, check_max_field_lengths($fields_with_lengths));
 
 
-	$comment = mysql_prep($_POST['comment']);
+	$comment = mysql_prep(filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_STRING));
 	$userId = $authClass->getValue('id');
 	$username = $authClass->getValue('username');
 
@@ -142,11 +143,11 @@ if(isset($threadId)){
 	print "<div id='wrapper'>";
 	//head info
 
-	while ($heading = mysql_fetch_array($info_set)){
+	while ($heading = mysql_fetch_array($info_set)) {
 		print "<h2 class='pagetitle'>". $heading['title'] ."</h2> There are {$numrow} reply's";
 	}
 	print "<br />";
-	per_page(BASE_URL . 'thread/' . $threadId . '/page/%page', '7');
+	per_page($pageNavUrl, '7');
 
 	print "<div class='orangeline'><span></span></div>";
 	while ($comment = mysql_fetch_array($comment_set)) {
@@ -190,9 +191,9 @@ print "<div id='wrapper'>";
 
 print 'Pages: '.round($numofpages).'<br>';
 if(isset($categoryId)) {
-	per_page("&page=%page", "7");
+	per_page($pageNavUrl, "7");
 } else {
-	per_page("?page=%page", "7");
+	per_page($pageNavUrl, "7");
 }
 
 print "<div id='threadheaders'>
@@ -261,9 +262,9 @@ print "<br />";
 echo 'Pages: '.round($numofpages).'<br>';
 
 if(isset($categoryId)) {
-	per_page("&page=%page", "7");
+	per_page($pageNavUrl, "7");
 } else {
-	per_page("?page=%page", "7");
+	per_page($pageNavUrl, "7");
 }
 print "</div>";
 //-----------------------------------------------------------------------------------end

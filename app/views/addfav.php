@@ -4,9 +4,8 @@ if(!$authClass->hasIdentity()) {
 }
 
 $userId = $authClass->getValue('id');
-if(isset($_GET['id'])) {
-
-	$threadId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+$threadId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+if(isset($threadId)) {
 
 	$query = 'SELECT * FROM thread WHERE id = ' . (integer) $threadId;
 	$threads = mysql_query($query);
