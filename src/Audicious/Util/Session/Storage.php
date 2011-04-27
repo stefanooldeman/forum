@@ -18,7 +18,11 @@ class Storage {
 
 	protected function loadPrefix() {
 		if(strlen(self::$prefix) < 1) {
-			self::$prefix = $_SERVER['HTTP_HOST'];
+			if(isset($_SERVER['HTTP_HOST'])) {
+				self::$prefix = $_SERVER['HTTP_HOST'];
+			} else {
+				self::$prefix = 'dummy_prefix';
+			}
 		}
 	}
 
