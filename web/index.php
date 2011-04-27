@@ -22,6 +22,9 @@ foreach($_GET as $key => $value) {
 	}
 }
 
+$session = $sc->get('session_class');
+$session->start();
+
 if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
 
 	$className = ucfirst(strtolower(filter_input(INPUT_GET, 'c', FILTER_UNSAFE_RAW)));

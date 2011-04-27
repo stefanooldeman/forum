@@ -12,11 +12,9 @@ $cache = $sc->register('cache_class', 'Audicious\Util\Cache')
 $sc->register('user_class', 'Audicious\Model\User')
 	->addMethodCall('setCache', array($sc->get('cache_class'), $cache->getProperties()));
 
-$user = $sc->get('user_class');
-
 
 $sc->register('session_class', 'Audicious\Util\Session')
-	->addMethodCall('start', array())
+//	->addMethodCall('start', array())
 	->addArgument(array(
 		'name' => 'AudiciousSession',
 		'cookie_secure' => 1,
@@ -24,8 +22,6 @@ $sc->register('session_class', 'Audicious\Util\Session')
 		'cookie_path' => '/web/',
 		'cookie_lifetime' => 0,
 	));
-
-$session = $sc->get('session_class');
 
 $authOptions = array('namespace' => 'user');
 $sc->register('auth_class', 'Audicious\Util\Authentication')
