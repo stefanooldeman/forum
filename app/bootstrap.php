@@ -14,7 +14,6 @@ $sc->register('user_class', 'Audicious\Model\User')
 
 
 $sc->register('session_class', 'Audicious\Util\Session')
-//	->addMethodCall('start', array())
 	->addArgument(array(
 		'name' => 'AudiciousSession',
 		'cookie_secure' => 1,

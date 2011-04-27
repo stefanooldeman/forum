@@ -3,3 +3,4 @@ includes/config_mirror.php
 uploads/*
 vendor/*
 src/Symfony/*
+tests/log
