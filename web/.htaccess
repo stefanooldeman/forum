@@ -8,6 +8,11 @@ RewriteBase /web/
 RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK|OPTIONS|HEAD) [NC]
 RewriteRule .* - [F]
 
+# xhr
+RewriteRule ^xhr\/([a-zA-Z0-9\-]+)\.([a-zA-Z0-9\-]+)$ index.php?c=$1&r=$2 [L]
+RewriteRule ^xhr\/([a-zA-Z0-9\-]+)\.([a-zA-Z0-9\-]+)\.([a-zA-Z0-9\-]+)$ index.php?c=$1&r=$2&a=$3 [L]
+
+# http get
 RewriteRule ^logout$ index.php?p=logout
 
 RewriteRule ^thread\/new$ index.php?p=postthread

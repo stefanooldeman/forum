@@ -10,7 +10,6 @@ require "../app/includes/connection.php";
 include "../app/includes/functions.php";
 include "../app/includes/form_functions.php";
 
-//todo move this to some request handler
 require '../autoload.php';
 require '../app/bootstrap.php';
 
@@ -23,14 +22,33 @@ foreach($_GET as $key => $value) {
 	}
 }
 
-//todo determine get or post
+if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+
+	$className = ucfirst(strtolower(filter_input(INPUT_GET, 'c', FILTER_UNSAFE_RAW)));
+	$className = '\\Audicious\\Ajax\\' . $className;
+	$methodName = strtolower(filter_input(INPUT_GET, 'r', FILTER_UNSAFE_RAW)) . 'Action';
+
+	$ajaxHelper = new Audicious\Ajax\Helper();
+	$ajaxHelper->execute($className, $methodName);
+
+	header('Cache-Control: no-cache, must-revalidate');
+	header('Content-type: application/json');
+
+	$response = array(
+		'data' => $ajaxHelper->getData(),
+		'error' => $ajaxHelper->getError()
+	);
+
+	exit(json_encode($response));
+}
+
 if(isset($_GET['p'])) {
 	$pageName = filter_input(INPUT_GET, 'p', FILTER_SANITIZE_STRING);
 } else {
 	$pageName = 'thread';
 }
 
-//these are used allot..
+//these variables are often used in the scripts below
 $authClass = $sc->get('auth_class');
 
 //todo move this to some request handler
